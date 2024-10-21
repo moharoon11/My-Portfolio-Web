@@ -1,51 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import haroon1 from '../Assets/haroon1.png';
-import { IoLogoLinkedin } from "react-icons/io5";
-import { IoLogoGithub } from "react-icons/io5";
-import { IoLogoInstagram } from "react-icons/io5";
+import { IoLogoLinkedin, IoLogoGithub, IoLogoInstagram } from "react-icons/io5";
+import { SiLeetcode } from "react-icons/si";
+import Navbar from '../Components/Navbar';
+import haroon3 from '../Assets/haroon3.png'; // Import the fallback image
 
 // Styled Components
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-`;
-
-const Navbar = styled.header`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #fff;
-
-  nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
-
-    &:hover {
-      color: #f77;
-    }
-  }
-
-  @media (max-width: 768px) {
-    nav a {
-      margin: 0 10px;
-      font-size: 0.9rem;
-    }
-  }
-`;
-
-const Logo = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffcc00;
 `;
 
 const Content = styled.div`
@@ -90,6 +56,77 @@ const IntroText = styled.div`
     }
   }
 `;
+
+
+const GradientButton = styled.button`
+  background: linear-gradient(90deg, #ffcc00, #f77); /* Gradient effect */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s; /* Smooth transitions */
+
+  &:hover {
+    transform: scale(1.05); /* Slightly increase size on hover */
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 15px;
+  }
+`;
+
+
+const OutlinedButton = styled.button`
+  background-color: transparent;
+  color: #000;
+  border: 2px solid #000; /* Border color */
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+
+  &:hover {
+    background-color: #000; /* Dark background on hover */
+    color: #fff; /* Change text color on hover */
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 15px;
+  }
+`;
+
+
+const ModernFlatButton = styled.button`
+  background-color: #007bff; /* Primary color */
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px; /* More rounded corners */
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Subtle shadow for depth */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+  margin-left: 10px;
+
+  &:hover {
+    background-color: #0056b3; /* Darker shade for hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 15px;
+  }
+`;
+
 
 const ContactButton = styled.button`
   background-color: #000;
@@ -143,34 +180,76 @@ const ImageSection = styled.div`
 `;
 
 function App() {
+  const [name, setName] = useState("Mohamed Haroon");
+  const [about, setAbout] = useState("A recent IT graduate with a strong passion for Java and full-stack development.");
+  const [email, setEmail] = useState("moharoon11107@gmail.com");
+  const [role, setRole] = useState("FRESHER | JAVA DEVELOPER");
+
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImageType, setProfileImageType] = useState("");
+
+  const fallbackProfileImage = haroon3; // Use imported image as fallback
+
+  const [resume, setResume] = useState([]);
+  const [resumeType, setResumeType] = useState("");
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`http://localhost:8888/api/users/get/${44200315}`);
+      const data = await response.json();
+
+      setName(data.name);
+      setAbout(data.about);
+      setEmail(data.email);
+      setRole(data.role);
+      setProfileImage(data.userImage1);
+      setProfileImageType(data.userImage1Type);
+      setResume(data.resume);
+      setResumeType(data.resumeType);
+    } catch (error) {
+      console.log("Failed to fetch data from the server");
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <Container>
-      <Navbar>
-        <Logo>HAROON</Logo>
-        <nav>
-          <a href="#home">Portfolio</a>
-          <a href="#about">Skills</a>
-          <a href="#works">Project</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </Navbar>
-
+      <Navbar email={email} />
       <Content>
         <IntroText>
-          <h1>Hey, I'm Mohammed Haroon</h1>
-          <p>
-            A 2023 Graduate Bsc Information Technology Passionalte about java and full stack development
-          </p>
-          <ContactButton>Contact me</ContactButton>
+          <h1>Hey, I'm {name}</h1>
+          <p>{role}</p>
+          <p>{about}</p>
+        
+          <OutlinedButton>View CV</OutlinedButton>
+          <ModernFlatButton>Download CV</ModernFlatButton>
           <SocialIcons>
-            <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank"><IoLogoLinkedin /></a>
-            <a href="https://github.com/moharoon11" target="_blank"><IoLogoGithub /></a>
-            <a href="https://www.instagram.com/_mohd.haroon/" target="_blank"><IoLogoInstagram /></a>
+            <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" rel="noopener noreferrer">
+              <IoLogoLinkedin />
+            </a>
+            <a href="https://github.com/moharoon11" target="_blank" rel="noopener noreferrer">
+              <IoLogoGithub />
+            </a>
+            <a href="https://www.instagram.com/_mohd.haroon/" target="_blank" rel="noopener noreferrer">
+              <IoLogoInstagram />
+            </a>
+            <a href="https://leetcode.com/u/moharoon11107/" target="_blank" rel="noopener noreferrer">
+              <SiLeetcode />
+            </a>
           </SocialIcons>
         </IntroText>
 
         <ImageSection>
-          <img src={haroon1} alt="Abo the designer" />
+          {
+            profileImage ? (
+              <img src={`data:${profileImageType};base64,${profileImage}`} alt="Profile from server" />
+            ) : (
+              <img src={fallbackProfileImage} alt="Fallback Profile" />
+            )
+          }
         </ImageSection>
       </Content>
     </Container>
