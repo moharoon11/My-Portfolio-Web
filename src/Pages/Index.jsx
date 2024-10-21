@@ -12,6 +12,7 @@ const Container = styled.div`
   align-items: center;
   padding: 20px;
   font-family: 'Arial', sans-serif;
+  
 `;
 
 const Content = styled.div`
@@ -57,6 +58,16 @@ const IntroText = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+  }
+`;
 
 const GradientButton = styled.button`
   background: linear-gradient(90deg, #ffcc00, #f77); /* Gradient effect */
@@ -79,7 +90,6 @@ const GradientButton = styled.button`
   }
 `;
 
-
 const OutlinedButton = styled.button`
   background-color: transparent;
   color: #000;
@@ -101,7 +111,6 @@ const OutlinedButton = styled.button`
     margin-top: 15px;
   }
 `;
-
 
 const ModernFlatButton = styled.button`
   background-color: #007bff; /* Primary color */
@@ -126,7 +135,6 @@ const ModernFlatButton = styled.button`
     margin-top: 15px;
   }
 `;
-
 
 const ContactButton = styled.button`
   background-color: #000;
@@ -179,7 +187,7 @@ const ImageSection = styled.div`
   }
 `;
 
-function App() {
+function Index() {
   const [name, setName] = useState("Mohamed Haroon");
   const [about, setAbout] = useState("A recent IT graduate with a strong passion for Java and full-stack development.");
   const [email, setEmail] = useState("moharoon11107@gmail.com");
@@ -223,9 +231,13 @@ function App() {
           <h1>Hey, I'm {name}</h1>
           <p>{role}</p>
           <p>{about}</p>
-        
-          <OutlinedButton>View CV</OutlinedButton>
-          <ModernFlatButton>Download CV</ModernFlatButton>
+
+          {/* Button container to make them side by side */}
+          <ButtonContainer>
+            <OutlinedButton>View CV</OutlinedButton>
+            <ModernFlatButton>Download CV</ModernFlatButton>
+          </ButtonContainer>
+
           <SocialIcons>
             <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" rel="noopener noreferrer">
               <IoLogoLinkedin />
@@ -256,4 +268,4 @@ function App() {
   );
 }
 
-export default App;
+export default Index;
