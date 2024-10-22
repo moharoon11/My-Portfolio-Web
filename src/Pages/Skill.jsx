@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Navbar from '../Components/Navbar';
-import java from '../Assets/java.png';
-import jdbc from '../Assets/jdbc.png';
-import servletjsp from '../Assets/servletjsp.png';
-import hibernate from '../Assets/hibernate.svg';
-import spring from '../Assets/spring.svg';
-import html from '../Assets/html.png';
-import css from '../Assets/css.png';
-import javascript from '../Assets/javascript.png';
-import react from '../Assets/react.png';
-import dsa from '../Assets/dsa.png';
+import java from '../Assets/Icons/java.png';
+import jdbc from '../Assets/Icons/jdbc.png';
+import servletjsp from '../Assets/Icons/servletjsp.png';
+import hibernate from '../Assets/Icons/hibernate.svg';
+import spring from '../Assets/Icons/spring.svg';
+import html from '../Assets/Icons/html.png';
+import css from '../Assets/Icons/css.png';
+import javascript from '../Assets/Icons/javascript.png';
+import react from '../Assets/Icons/react.png';
+import dsa from '../Assets/Icons/dsa.png';
 
 // Styled Components
 const PageWrapper = styled.div`

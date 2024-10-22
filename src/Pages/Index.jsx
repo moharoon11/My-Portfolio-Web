@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { IoLogoLinkedin, IoLogoGithub, IoLogoInstagram } from "react-icons/io5";
 import { SiLeetcode } from "react-icons/si";
 import Navbar from '../Components/Navbar';
-import haroon3 from '../Assets/haroon3.png'; // Import the fallback image
+import haroon3 from '../Assets/ProfileImage/haroon3.png'; // Import the fallback image
+import {Link} from 'react-router-dom';
 
 // Styled Components
 const Container = styled.div`
@@ -89,7 +90,7 @@ const GradientButton = styled.button`
   }
 `;
 
-const OutlinedButton = styled.button`
+const OutlinedButton = styled(Link)`
   background-color: transparent;
   color: #000;
   border: 2px solid #000; /* Border color */
