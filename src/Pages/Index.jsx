@@ -12,7 +12,6 @@ const Container = styled.div`
   align-items: center;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-  
 `;
 
 const Content = styled.div`
@@ -225,7 +224,7 @@ function Index() {
 
   return (
     <Container>
-      <Navbar email={email} />
+      <Navbar email={email} phone="+91 9360984799"/>
       <Content>
         <IntroText>
           <h1>Hey, I'm {name}</h1>

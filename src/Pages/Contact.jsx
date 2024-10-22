@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Navbar from '../Components/Navbar';
 import { IoMail, IoLogoLinkedin, IoLogoGithub, IoLogoInstagram } from "react-icons/io5";
@@ -87,70 +87,46 @@ const SocialIcons = styled.div`
   }
 `;
 
+
+
 function Contact() {
-  const [email, setEmail] = useState("moharoon11107@gmail.com");
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const form = useRef(); // Create a reference to the form
+  const email = "moharoon11107@gmail.com"; // Email for Navbar
 
-  useEffect(() => {
-    // Initialize EmailJS with your user ID
-    emailjs.init('YOUR_USER_ID'); // Replace with your EmailJS user ID
-  }, []);
+  const sendEmail = (e) => {
+    e.preventDefault();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
+    // Construct the message object to match the EmailJS template
+    const messageData = {
+      to_name: "Mohamed Haroon", // The recipient's name
+      from_name: form.current.user_name.value, // Get user name from form input
+      from_email: form.current.user_email.value, // Get user email from form input
+      message: form.current.message.value, // Get message from form input
+    };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
-      .then((response) => {
-        console.log('Email sent successfully!', response.status, response.text);
-        // Optionally reset the form fields after successful submission
-        setFormData({ name: '', email: '', message: '' });
+    emailjs.send('service_punaynd', 'template_mqg67y9', messageData, 'khrPbhqVPxV-12t2f')
+      .then(() => {
+        alert("Email sent successfully!");
+        console.log('SUCCESS!');
+        e.target.reset(); // Reset the form after successful submission
       }, (error) => {
-        console.error('Failed to send email. Error:', error);
+        alert("Failed to send email! Please try again later.");
+        console.error('FAILED...', error.text);
       });
   };
 
   return (
     <Container>
-      <Navbar email={email} />
+      <Navbar email={email} phone="91+ 9360984799"/>
       <Content>
         <Title>Contact Me</Title>
-        <Form onSubmit={handleSubmit}>
-          <input 
-            type="text" 
-            name="name" 
-            placeholder="Your Name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
-          />
-          <input 
-            type="email" 
-            name="email" 
-            placeholder="Your Email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            required 
-          />
-          <textarea 
-            name="message" 
-            rows="4" 
-            placeholder="Your Message" 
-            value={formData.message} 
-            onChange={handleChange} 
-            required 
-          />
+        <Form ref={form} onSubmit={sendEmail}> {/* Use ref for the form */}
+          <label>Your Name</label>
+          <input type="text" name="user_name" required />
+          <label>Your Email</label>
+          <input type="email" name="user_email" required />
+          <label>Your Message</label>
+          <textarea name="message" rows="13" required />
           <SubmitButton type="submit">Send Message</SubmitButton>
         </Form>
         <SocialIcons>
@@ -168,6 +144,7 @@ function Contact() {
           </a>
         </SocialIcons>
       </Content>
+   
     </Container>
   );
 }
