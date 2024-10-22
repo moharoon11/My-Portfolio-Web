@@ -4,7 +4,8 @@ import { IoLogoLinkedin, IoLogoGithub, IoLogoInstagram } from "react-icons/io5";
 import { SiLeetcode } from "react-icons/si";
 import Navbar from '../Components/Navbar';
 import haroon3 from '../Assets/ProfileImage/haroon3.png'; // Import the fallback image
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Import motion from framer-motion
 
 // Styled Components
 const Container = styled.div`
@@ -12,7 +13,37 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Montserrat', sans-serif; /* Apply Montserrat here */
+`;
+
+const IntroText = styled.div`
+  flex: 1;
+  padding-right: 30px;
+
+  h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #fad961, #f76b1c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat here */
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 20px 0;
+    font-family: 'Montserrat', sans-serif; /* Apply Montserrat here */
+  }
+
+  @media (max-width: 768px) {
+    padding-right: 0;
+    h1 {
+      font-size: 2rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -30,33 +61,48 @@ const Content = styled.div`
   }
 `;
 
-const IntroText = styled.div`
-  flex: 1;
-  padding-right: 30px;
+const RoleText = styled.p`
+  font-size: 1.5rem; /* Increased font size */
+  font-weight: bold; /* Make it bold */
+  color: #1de9b6; /* Color change for emphasis */
+  text-transform: uppercase; /* Uppercase transformation */
+  margin: 10px 0;
+  letter-spacing: 1px; /* Slightly increased spacing between letters */
+`;
 
-  h1 {
-    font-size: 2.5rem;
-    background: linear-gradient(90deg, #fad961, #f76b1c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
 
-  p {
-    font-size: 1.2rem;
-    color: #555;
-    margin: 20px 0;
-  }
 
+const DescriptionText = styled.p`
+  font-family: 'Montserrat', sans-serif; /* Apply Montserrat font */
+  font-size: 1.2rem; /* Base font size */
+  color: #000; /* Darker text color for better contrast */
+  margin: 20px 0;
+  line-height: 1.6; /* Increased line height for better readability */
+  padding: 15px; /* Padding for breathing room */
+   /* Smooth transitions */
+  
+  /* Eye-catching styles */
+  font-weight: 500; /* Medium font weight */
+  letter-spacing: 0.5px; /* Slightly increase letter spacing for clarity */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle text shadow for depth */
+
+  
+
+  /* Media queries for mobile responsiveness */
   @media (max-width: 768px) {
-    padding-right: 0;
-    h1 {
-      font-size: 2rem;
-    }
-    p {
-      font-size: 1rem;
-    }
+    font-size: 1rem; /* Smaller font size for mobile */
+    padding: 12px; /* Adjust padding for mobile */
+    margin: 15px 0; /* Adjust margin for mobile */
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem; /* Even smaller font size for very small screens */
+    padding: 10px; /* Further adjust padding */
+    margin: 10px 0; /* Further adjust margin */
   }
 `;
+
+
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -69,45 +115,24 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const GradientButton = styled.button`
-  background: linear-gradient(90deg, #ffcc00, #f77); /* Gradient effect */
+const GradientButton = styled(Link)`
+  background: linear-gradient(90deg, #1de9b6, #1dc4e9); /* Minty fresh gradient */
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 25px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s; /* Smooth transitions */
+  text-decoration: none;
 
   &:hover {
     transform: scale(1.05); /* Slightly increase size on hover */
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    margin-top: 15px;
-  }
-`;
-
-const OutlinedButton = styled(Link)`
-  background-color: transparent;
-  color: #000;
-  border: 2px solid #000; /* Border color */
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
-
-  &:hover {
-    background-color: #000; /* Dark background on hover */
-    color: #fff; /* Change text color on hover */
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     margin-top: 15px;
   }
 `;
@@ -131,44 +156,43 @@ const ModernFlatButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    margin-top: 15px;
-  }
-`;
-
-const ContactButton = styled.button`
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #444;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+    width: 90%;
     margin-top: 15px;
   }
 `;
 
 const SocialIcons = styled.div`
   display: flex;
+  flex-direction: column; /* Ensure row layout */
+  justify-content: center; /* Center social icons */
   margin-top: 20px;
+  flex-wrap: wrap; /* Allow wrapping if necessary */
+`;
 
-  a {
-    margin: 0 10px;
-    font-size: 1.5rem;
-    color: black;
-    text-decoration: none;
+const StyledIcon = styled.a`
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+  margin: 10px 10px; /* Margin around the icons */
+  font-size: 1.5rem;
+  color: ${props => props.color || 'black'}; /* Default color is black */
+  text-decoration: none; /* Remove underline from links */
 
-    &:hover {
-      color: #f76b1c;
-    }
+  span {
+    margin-left: 8px; /* Add space between icon and text */
+    font-size: 1rem; /* Adjust text size */
+    font-weight: 500; /* Medium font weight */
+    color: inherit; /* Inherit color from parent */
+    transition: color 0.3s ease; 
+    letter-spacing: 1px;/* Smooth transition for text color */
   }
+
+  &:hover {
+    cursor: pointer; /* Change cursor on hover */
+    color: #007bff; /* Change icon color on hover */
+    
+    span {
+      color: #007bff; /* Change span text color on hover */
+    }
 `;
 
 const ImageSection = styled.div`
@@ -187,7 +211,23 @@ const ImageSection = styled.div`
   }
 `;
 
-function Index() {
+// Animation variants for framer-motion
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    x: -100,
+  },
+  in: {
+    opacity: 1,
+    x: 0,
+  },
+  out: {
+    opacity: 0,
+    x: 100,
+  },
+};
+
+const Index = () => {
   const [name, setName] = useState("Mohamed Haroon");
   const [about, setAbout] = useState("A recent IT graduate with a strong passion for Java and full-stack development.");
   const [email, setEmail] = useState("moharoon11107@gmail.com");
@@ -203,7 +243,7 @@ function Index() {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`http://localhost:8888/api/users/get/${44200315}`);
+      const response = await fetch(`http://localhost:8888/api/users/get/44200315`);
       const data = await response.json();
 
       setName(data.name);
@@ -223,49 +263,72 @@ function Index() {
     fetchUser();
   }, []);
 
+  // Function to download resume from server if available, else fallback to public resume
+  const downloadResume = () => {
+    if (resume && resume.length > 0) {
+      const blob = new Blob([new Uint8Array(resume)], { type: resumeType });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'mohamed_haroon_resume_server.pdf'; // Change file name if required
+      link.click();
+    } else {
+      const link = document.createElement('a');
+      link.href = '/resume.pdf'; // Make sure the resume is placed in the public folder
+      link.download = 'mohamed_haroon_resume_asset.pdf';
+      link.click();
+    }
+  };
+
   return (
-    <Container>
-      <Navbar email={email} phone="+91 9360984799"/>
-      <Content>
-        <IntroText>
-          <h1>Hey, I'm {name}</h1>
-          <p>{role}</p>
-          <p>{about}</p>
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={{ duration: 0.7 }}
+    >
+      <Container>
+        <Navbar email={email} phone="+91 9360984799" />
+        <Content>
+          <IntroText>
+            <h1>Hey, I'm {name}</h1>
+            <RoleText>{role}</RoleText>
+            <DescriptionText>{about}</DescriptionText>
 
-          {/* Button container to make them side by side */}
-          <ButtonContainer>
-            <OutlinedButton>View CV</OutlinedButton>
-            <ModernFlatButton>Download CV</ModernFlatButton>
-          </ButtonContainer>
+            <ButtonContainer>
+              <GradientButton to="/contact">Contact Me</GradientButton>
+              <ModernFlatButton onClick={downloadResume}>Download CV</ModernFlatButton>
+            </ButtonContainer>
+            <SocialIcons>
+  <StyledIcon href="https://www.linkedin.com/in/mohamed-haroon-43868a249/" target="_blank" color="#0072b1">
+    <IoLogoLinkedin />
+    <span>LinkedIn</span>
+  </StyledIcon>
+  <StyledIcon href="https://github.com/mohamed-haroon" target="_blank" color="#333">
+    <IoLogoGithub />
+    <span>Github</span>
+  </StyledIcon>
+  <StyledIcon href="https://leetcode.com/mohamedharoon/" target="_blank" color="#FFA500">
+    <SiLeetcode />
+    <span>LeetCode</span>
+  </StyledIcon>
+  <StyledIcon href="https://www.instagram.com/mohamed_haroon/" target="_blank" color="#E1306C">
+    <IoLogoInstagram />
+    <span>Instagram</span>
+  </StyledIcon>
+</SocialIcons>
 
-          <SocialIcons>
-            <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" rel="noopener noreferrer">
-              <IoLogoLinkedin />
-            </a>
-            <a href="https://github.com/moharoon11" target="_blank" rel="noopener noreferrer">
-              <IoLogoGithub />
-            </a>
-            <a href="https://www.instagram.com/_mohd.haroon/" target="_blank" rel="noopener noreferrer">
-              <IoLogoInstagram />
-            </a>
-            <a href="https://leetcode.com/u/moharoon11107/" target="_blank" rel="noopener noreferrer">
-              <SiLeetcode />
-            </a>
-          </SocialIcons>
-        </IntroText>
-
-        <ImageSection>
-          {
-            profileImage ? (
-              <img src={`data:${profileImageType};base64,${profileImage}`} alt="Profile from server" />
-            ) : (
-              <img src={fallbackProfileImage} alt="Fallback Profile" />
-            )
-          }
-        </ImageSection>
-      </Content>
-    </Container>
+          </IntroText>
+          <ImageSection>
+            <img
+              src={profileImage ? `data:${profileImageType};base64,${profileImage}` : fallbackProfileImage}
+              alt="Profile"
+            />
+          </ImageSection>
+        </Content>
+      </Container>
+    </motion.div>
   );
-}
+};
 
 export default Index;
