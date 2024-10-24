@@ -106,6 +106,88 @@ const ProjectLinkButton = styled(motion.a)`
   }
 `;
 
+
+
+const Loader = styled.div`
+  width: 65px;
+  height: 117px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #ff8001;
+    box-shadow: 0 0 0 50px;
+    clip-path: polygon(
+      100% 0,
+      23% 46%,
+      46% 44%,
+      15% 69%,
+      38% 67%,
+      0 100%,
+      76% 57%,
+      53% 58%,
+      88% 33%,
+      60% 37%
+    );
+  }
+
+  &::after {
+    animation: l8 1s infinite;
+    transform: perspective(300px) translateZ(0px);
+  }
+
+  @keyframes l8 {
+    to {
+      transform: perspective(300px) translateZ(180px);
+      opacity: 0;
+    }
+  }
+`;
+
+// Styled component for the loading text
+const LoadingText = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40px;
+  animation: pulse 1.5s infinite;
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centers the items horizontally */
+  justify-content: center;  /* Centers the items vertically */
+  height: calc(100vh - 250px);  /* Full height of the viewport minus some space */
+  margin-top: 50px;  /* Pushes the container down */
+  border-radius: 10px;  /* Rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+  padding: 10px; /* Padding around the content */
+  width: 100%;
+  
+  /* Adding a light background color to indicate loading */
+  background: rgba(255, 255, 255, 0.8);  /* Light whitish background with some transparency */
+`;
+
+
+
+
 const hardcodedProjects = [
    {
     projectId: 1, 
@@ -192,71 +274,103 @@ const hardcodedProjects = [
 function Project() {
   const [projects, setProjects] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // Fetch projects from API
   useEffect(() => {
     const fetchProjects = async () => {
+      
+      // If data is not in local storage, fetch from API
       try {
-        const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`); // Replace with actual userId
+        const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`);
         const data = await response.json();
-        setProjects(data);
+        
+         console.log(data);
+          // Update state with the fetched data
+          setProjects(data);
+          
+        
+          console.log("Projects have been loaded from the API:", data);
+        
+        setIsLoading(false);
       } catch (error) {
+        // If there's an error, fall back to hardcoded projects
         setProjects(hardcodedProjects);
+        setIsLoading(false);
         console.error('Error fetching projects:', error);
       }
     };
+  
     fetchProjects();
   }, []);
+  
+  
+  
+  
+  
+  
 
   return (
     <>
        
        <ProjectContainer>
        <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799"/>
-        <h2>My Projects</h2>
-        <ProjectList>
-  {projects.map((project) => (
-    <ProjectCard
-      key={project.projectId}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
-      transition={{ duration: 0.3 }}
-    >
-      <ProjectImage
-        src={project.imageDate 
-              ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
-              : project.projectImage                                    // Hardcoded asset image
+        
+        {
+          isLoading ? (
+            <LoaderContainer>
+               <LoadingText>Presenting My Projects...</LoadingText>
+               <Loader/>
+            </LoaderContainer>
+          ) : (
+            <ProjectList>
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.projectId}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ProjectImage
+                  src={project.imageDate 
+                        ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
+                        : project.projectImage                                    // Hardcoded asset image
+                  }
+                  alt={project.imageName || project.projectName}   // Fallback for alt if imageName is missing
+                />
+                <ProjectTitle>{project.projectName}</ProjectTitle>
+                <ProjectDescription>{project.projectDescription}</ProjectDescription>
+                <ProjectLinks>
+                  {project.liveLink && (
+                    <ProjectLinkButton
+                      href={project.liveLink}
+                      target="_blank"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Live Demo
+                    </ProjectLinkButton>
+                  )}
+                  {project.codeLink && (
+                    <ProjectLinkButton
+                      href={project.codeLink}
+                      target="_blank"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      View Code
+                    </ProjectLinkButton>
+                  )}
+                </ProjectLinks>
+              </ProjectCard>
+            ))}
+          </ProjectList>
+          )
         }
-        alt={project.imageName || project.projectName}   // Fallback for alt if imageName is missing
-      />
-      <ProjectTitle>{project.projectName}</ProjectTitle>
-      <ProjectDescription>{project.projectDescription}</ProjectDescription>
-      <ProjectLinks>
-        {project.liveLink && (
-          <ProjectLinkButton
-            href={project.liveLink}
-            target="_blank"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Live Demo
-          </ProjectLinkButton>
-        )}
-        {project.codeLink && (
-          <ProjectLinkButton
-            href={project.codeLink}
-            target="_blank"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Code
-          </ProjectLinkButton>
-        )}
-      </ProjectLinks>
-    </ProjectCard>
-  ))}
-</ProjectList>
+
+        
 
       </ProjectContainer>
     </>

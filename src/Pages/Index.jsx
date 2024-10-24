@@ -210,6 +210,82 @@ const ImageSection = styled.div`
     margin-top: 20px;
   }
 `;
+const Loader = styled.div`
+  width: 65px;
+  height: 117px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #ff8001;
+    box-shadow: 0 0 0 50px;
+    clip-path: polygon(
+      100% 0,
+      23% 46%,
+      46% 44%,
+      15% 69%,
+      38% 67%,
+      0 100%,
+      76% 57%,
+      53% 58%,
+      88% 33%,
+      60% 37%
+    );
+  }
+
+  &::after {
+    animation: l8 1s infinite;
+    transform: perspective(300px) translateZ(0px);
+  }
+
+  @keyframes l8 {
+    to {
+      transform: perspective(300px) translateZ(180px);
+      opacity: 0;
+    }
+  }
+`;
+
+// Styled component for the loading text
+const LoadingText = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 40px;
+  animation: pulse 1.5s infinite;
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centers the items horizontally */
+  justify-content: center;  /* Centers the items vertically */
+  height: calc(100vh - 250px);  /* Full height of the viewport minus some space */
+  margin-top: 50px;  /* Pushes the container down */
+  border-radius: 10px;  /* Rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+  padding: 10px; /* Padding around the content */
+  width: 100%;
+  
+  /* Adding a light background color to indicate loading */
+  background: rgba(255, 255, 255, 0.8);  /* Light whitish background with some transparency */
+`;
 
 // Animation variants for framer-motion
 const pageVariants = {
@@ -228,24 +304,32 @@ const pageVariants = {
 };
 
 const Index = () => {
-  const [name, setName] = useState("Mohamed Haroon");
-  const [about, setAbout] = useState("A recent IT graduate with a strong passion for Java and full-stack development.");
-  const [email, setEmail] = useState("moharoon11107@gmail.com");
-  const [role, setRole] = useState("FRESHER | JAVA DEVELOPER");
+
+  
+
+  const [name, setName] = useState("");
+  const [about, setAbout] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
 
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageType, setProfileImageType] = useState("");
-
-  const fallbackProfileImage = haroon3; // Use imported image as fallback
+  const [fallbackProfileImage, setFallbackPorfileImage] = useState(null);
+  
 
   const [resume, setResume] = useState([]);
   const [resumeType, setResumeType] = useState("");
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/users/get/44200315`);
-      const data = await response.json();
+  const [loading, setLoading] = useState(true);
 
+
+
+  const fetchUser = async () => {
+    // Try to get data from local storage first
+    const localStorageUserData = localStorage.getItem('userData');
+  
+    if (localStorageUserData) {
+      const data = JSON.parse(localStorageUserData);
       setName(data.name);
       setAbout(data.about);
       setEmail(data.email);
@@ -254,11 +338,40 @@ const Index = () => {
       setProfileImageType(data.userImage1Type);
       setResume(data.resume);
       setResumeType(data.resumeType);
+      setLoading(false);
+      console.log("Loaded data from local storage");
+      return; // Exit if data is loaded from local storage
+    }
+  
+    try {
+      const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/users/get/44200315`);
+      const data = await response.json();
+  
+      // Update state with the fetched data
+      setName(data.name);
+      setAbout(data.about);
+      setEmail(data.email);
+      setRole(data.role);
+      setProfileImage(data.userImage1);
+      setProfileImageType(data.userImage1Type);
+      setResume(data.resume);
+      setResumeType(data.resumeType);
+  
+      // Save the fetched data to local storage
+      localStorage.setItem('userData', JSON.stringify(data));
+  
+      setLoading(false);
+      console.log("Data has been loaded from the API");
     } catch (error) {
-      console.log("Failed to fetch data from the server");
+      setName("Mohamed Haroon");
+      setAbout("A recent IT graduate with a strong passion for Java and full-stack development.");
+      setEmail("moharoon11107@gmail.com");
+      setRole("FRESHER | JAVA DEVELOPER");
+      setProfileImage(haroon3);
+      console.log("Failed to fetch data from the server! loading and displaying the static data... to the web");
     }
   };
-
+  
   useEffect(() => {
     fetchUser();
   }, []);
@@ -289,43 +402,57 @@ const Index = () => {
     >
       <Container>
         <Navbar email={email} phone="+91 9360984799" />
-        <Content>
-          <IntroText>
-            <h1>Hey, I'm {name}</h1>
-            <RoleText>{role}</RoleText>
-            <DescriptionText>{about}</DescriptionText>
 
-            <ButtonContainer>
-              <GradientButton to="/contact">Contact Me</GradientButton>
-              <ModernFlatButton onClick={downloadResume}>Download CV</ModernFlatButton>
-            </ButtonContainer>
-            <SocialIcons>
-  <StyledIcon href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" color="#0072b1">
-    <IoLogoLinkedin />
-    <span>LinkedIn</span>
-  </StyledIcon>
-  <StyledIcon href="https://github.com/moharoon11?tab=repositories" target="_blank" color="#333">
-    <IoLogoGithub />
-    <span>Github</span>
-  </StyledIcon>
-  <StyledIcon href="https://leetcode.com/u/moharoon11107/" target="_blank" color="#FFA500">
-    <SiLeetcode />
-    <span>LeetCode</span>
-  </StyledIcon>
-  <StyledIcon href="https://www.instagram.com/_mohd.haroon/" target="_blank" color="#E1306C">
-    <IoLogoInstagram />
-    <span>Instagram</span>
-  </StyledIcon>
-</SocialIcons>
+        {loading ? 
+           (
+            <LoaderContainer>
+             <LoadingText>loading...</LoadingText>
+              <Loader />
+            </LoaderContainer>
+            
+           ) : 
+           (
 
-          </IntroText>
-          <ImageSection>
-            <img
-              src={profileImage ? `data:${profileImageType};base64,${profileImage}` : fallbackProfileImage}
-              alt="Profile"
-            />
-          </ImageSection>
-        </Content>
+            <Content>
+            <IntroText>
+              <h1>Hey, I'm {name}</h1>
+              <RoleText>{role}</RoleText>
+              <DescriptionText>{about}</DescriptionText>
+  
+              <ButtonContainer>
+                <GradientButton to="/contact">Contact Me</GradientButton>
+                <ModernFlatButton onClick={downloadResume}>Download CV</ModernFlatButton>
+              </ButtonContainer>
+              <SocialIcons>
+    <StyledIcon href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" color="#0072b1">
+      <IoLogoLinkedin />
+      <span>LinkedIn</span>
+    </StyledIcon>
+    <StyledIcon href="https://github.com/moharoon11?tab=repositories" target="_blank" color="#333">
+      <IoLogoGithub />
+      <span>Github</span>
+    </StyledIcon>
+    <StyledIcon href="https://leetcode.com/u/moharoon11107/" target="_blank" color="#FFA500">
+      <SiLeetcode />
+      <span>LeetCode</span>
+    </StyledIcon>
+    <StyledIcon href="https://www.instagram.com/_mohd.haroon/" target="_blank" color="#E1306C">
+      <IoLogoInstagram />
+      <span>Instagram</span>
+    </StyledIcon>
+  </SocialIcons>
+  
+            </IntroText>
+            <ImageSection>
+              <img
+                src={profileImage ? `data:${profileImageType};base64,${profileImage}` : fallbackProfileImage}
+                alt="Profile"
+              />
+            </ImageSection>
+          </Content>
+           )
+        }
+        
       </Container>
     </motion.div>
   );
