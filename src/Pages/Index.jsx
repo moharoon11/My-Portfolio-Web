@@ -176,7 +176,7 @@ const StyledIcon = styled.a`
   font-size: 1.5rem;
   color: ${props => props.color || 'black'}; /* Default color is black */
   text-decoration: none; /* Remove underline from links */
-
+  
   span {
     margin-left: 8px; /* Add space between icon and text */
     font-size: 1rem; /* Adjust text size */
@@ -243,7 +243,7 @@ const Index = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`http://localhost:8888/api/users/get/44200315`);
+      const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/users/get/44200315`);
       const data = await response.json();
 
       setName(data.name);
@@ -300,19 +300,19 @@ const Index = () => {
               <ModernFlatButton onClick={downloadResume}>Download CV</ModernFlatButton>
             </ButtonContainer>
             <SocialIcons>
-  <StyledIcon href="https://www.linkedin.com/in/mohamed-haroon-43868a249/" target="_blank" color="#0072b1">
+  <StyledIcon href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" color="#0072b1">
     <IoLogoLinkedin />
     <span>LinkedIn</span>
   </StyledIcon>
-  <StyledIcon href="https://github.com/mohamed-haroon" target="_blank" color="#333">
+  <StyledIcon href="https://github.com/moharoon11?tab=repositories" target="_blank" color="#333">
     <IoLogoGithub />
     <span>Github</span>
   </StyledIcon>
-  <StyledIcon href="https://leetcode.com/mohamedharoon/" target="_blank" color="#FFA500">
+  <StyledIcon href="https://leetcode.com/u/moharoon11107/" target="_blank" color="#FFA500">
     <SiLeetcode />
     <span>LeetCode</span>
   </StyledIcon>
-  <StyledIcon href="https://www.instagram.com/mohamed_haroon/" target="_blank" color="#E1306C">
+  <StyledIcon href="https://www.instagram.com/_mohd.haroon/" target="_blank" color="#E1306C">
     <IoLogoInstagram />
     <span>Instagram</span>
   </StyledIcon>

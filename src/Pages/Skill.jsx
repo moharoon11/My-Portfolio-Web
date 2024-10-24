@@ -130,7 +130,7 @@ function Skill() {
 
   const fetchSkills = async () => {
     try {
-      const response = await fetch(`http://localhost:8888/api/skills/getAll/${44200315}`);
+      const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/skills/getAll/44200315`);
       const data = await response.json();
       if (data.length > 0) {
         setSkillSet(data.map(skill => ({

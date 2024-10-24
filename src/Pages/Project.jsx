@@ -197,7 +197,7 @@ function Project() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch(`http://localhost:8888/api/projects/user/44200315`); // Replace with actual userId
+        const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`); // Replace with actual userId
         const data = await response.json();
         setProjects(data);
       } catch (error) {
