@@ -210,6 +210,7 @@ const ImageSection = styled.div`
     margin-top: 20px;
   }
 `;
+
 const Loader = styled.div`
   width: 65px;
   height: 117px;
@@ -382,12 +383,12 @@ const Index = () => {
       const blob = new Blob([new Uint8Array(resume)], { type: resumeType });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'mohamed_haroon_resume_server.pdf'; // Change file name if required
+      link.download = 'mohamed_haroon_resume.pdf'; // Change file name if required
       link.click();
     } else {
       const link = document.createElement('a');
       link.href = '/resume.pdf'; // Make sure the resume is placed in the public folder
-      link.download = 'mohamed_haroon_resume_asset.pdf';
+      link.download = 'mohamed_haroon_resume.pdf';
       link.click();
     }
   };
@@ -400,8 +401,9 @@ const Index = () => {
       variants={pageVariants}
       transition={{ duration: 0.7 }}
     >
+       
       <Container>
-        <Navbar email={email} phone="+91 9360984799" />
+      <Navbar email={email} phone="+91 9360984799" />
 
         {loading ? 
            (
@@ -454,6 +456,7 @@ const Index = () => {
         }
         
       </Container>
+    
     </motion.div>
   );
 };

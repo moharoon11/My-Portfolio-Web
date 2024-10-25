@@ -13,6 +13,7 @@ import recipeimage from '../Assets/ProjectImage/recipe.png';
 import socialmediawebimage from '../Assets/ProjectImage/socialmediaweb.png';
 import youtubecloneimage from '../Assets/ProjectImage/youtubeclone.png';
 import enotesimage from '../Assets/ProjectImage/notesproject.jpeg';
+import { useQuery } from 'react-query';
 
 
 // Styled Components for mobile responsiveness and animations
@@ -21,7 +22,8 @@ const ProjectContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f8f9fa;
+  background-color: #e9ecef;
+  height: 93vh;
 `;
 
 const ProjectList = styled.div`
@@ -30,7 +32,7 @@ const ProjectList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-
+  margin-top: 40px;
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -118,7 +120,7 @@ const Loader = styled.div`
     content: "";
     position: absolute;
     inset: 0;
-    background: #ff8001;
+    background: red;
     box-shadow: 0 0 0 50px;
     clip-path: polygon(
       100% 0,
@@ -184,7 +186,6 @@ const LoaderContainer = styled.div`
   /* Adding a light background color to indicate loading */
   background: rgba(255, 255, 255, 0.8);  /* Light whitish background with some transparency */
 `;
-
 
 
 
@@ -271,112 +272,124 @@ const hardcodedProjects = [
   },
 ]
 
+async function fetchProjects() {
+  const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`);
+  
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+}
 function Project() {
   const [projects, setProjects] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const [projectsPerPage] = useState(3); // Number of projects to show per page
 
-  const [isLoading, setIsLoading] = useState(true);
+  const { status, error } = useQuery('myProjects', fetchProjects, {
+    onSuccess: (data) => {
+      setProjects(data);  // Set the fetched projects if successful
+    },
+    onError: () => {
+      // Handle the error by falling back to hardcoded projects
+      setProjects(hardcodedProjects);
+    },
+  });
 
+  if (status === 'loading') {
+    return (
+      <>
+       <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799" />
+      <LoaderContainer>
+        <LoadingText>Loading Projects....</LoadingText>
+        <Loader />
+      </LoaderContainer>
+      </>
+   
+    );
+  }
 
-  // Fetch projects from API
-  useEffect(() => {
-    const fetchProjects = async () => {
-      
-      // If data is not in local storage, fetch from API
-      try {
-        const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`);
-        const data = await response.json();
-        
-         console.log(data);
-          // Update state with the fetched data
-          setProjects(data);
-          
-        
-          console.log("Projects have been loaded from the API:", data);
-        
-        setIsLoading(false);
-      } catch (error) {
-        // If there's an error, fall back to hardcoded projects
-        setProjects(hardcodedProjects);
-        setIsLoading(false);
-        console.error('Error fetching projects:', error);
-      }
-    };
-  
-    fetchProjects();
-  }, []);
-  
-  
-  
-  
-  
-  
+  // Calculate current projects to display
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   return (
     <>
-       
-       <ProjectContainer>
-       <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799"/>
-        
-        {
-          isLoading ? (
-            <LoaderContainer>
-               <LoadingText>Presenting My Projects...</LoadingText>
-               <Loader/>
-            </LoaderContainer>
-          ) : (
-            <ProjectList>
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.projectId}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProjectImage
-                  src={project.imageDate 
-                        ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
-                        : project.projectImage                                    // Hardcoded asset image
-                  }
-                  alt={project.imageName || project.projectName}   // Fallback for alt if imageName is missing
-                />
-                <ProjectTitle>{project.projectName}</ProjectTitle>
-                <ProjectDescription>{project.projectDescription}</ProjectDescription>
-                <ProjectLinks>
-                  {project.liveLink && (
-                    <ProjectLinkButton
-                      href={project.liveLink}
-                      target="_blank"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Live Demo
-                    </ProjectLinkButton>
-                  )}
-                  {project.codeLink && (
-                    <ProjectLinkButton
-                      href={project.codeLink}
-                      target="_blank"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      View Code
-                    </ProjectLinkButton>
-                  )}
-                </ProjectLinks>
-              </ProjectCard>
-            ))}
-          </ProjectList>
-          )
-        }
+      
+      <ProjectContainer>
+      <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799" />
+        <ProjectList>
+          {currentProjects.map((project) => (
+            <ProjectCard
+              key={project.projectId}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProjectImage
+                src={project.imageDate
+                      ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
+                      : project.projectImage                                    // Hardcoded asset image
+                }
+                alt={project.imageName || project.projectName}   // Fallback for alt if imageName is missing
+              />
+              <ProjectTitle>{project.projectName}</ProjectTitle>
+              <ProjectDescription>{project.projectDescription}</ProjectDescription>
+              <ProjectLinks>
+                {project.liveLink && (
+                  <ProjectLinkButton
+                    href={project.liveLink}
+                    target="_blank"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Live Demo
+                  </ProjectLinkButton>
+                )}
+                {project.codeLink && (
+                  <ProjectLinkButton
+                    href={project.codeLink}
+                    target="_blank"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    View Code
+                  </ProjectLinkButton>
+                )}
+              </ProjectLinks>
+            </ProjectCard>
+          ))}
+        </ProjectList>
 
-        
-
+        {/* Pagination */}
+        <div style={{ marginTop: '80px', textAlign: 'center' }}>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              style={{
+                padding: '0.5rem 1rem',
+                margin: '0 0.2rem',
+                backgroundColor: currentPage === index + 1 ? '#007bff' : '#f0f0f0',
+                color: currentPage === index + 1 ? '#fff' : '#000',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </ProjectContainer>
+      
+     
+      
     </>
-     
-     
-    
   );
 }
 

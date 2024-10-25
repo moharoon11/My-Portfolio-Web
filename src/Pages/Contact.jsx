@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../Components/Navbar';
 import { IoMail, IoLogoLinkedin, IoLogoGithub, IoLogoInstagram } from "react-icons/io5";
@@ -18,16 +18,16 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1200px; /* Increased max-width for larger screens */
+  max-width: 1200px;
   width: 100%;
   margin: 50px 0;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Ensure no overflow for rounded corners */
+  overflow: hidden;
   
   @media (min-width: 768px) {
-    flex-direction: row; /* Split layout for larger screens */
+    flex-direction: row;
   }
 `;
 
@@ -36,15 +36,14 @@ const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px; /* Default height for the image container */
+  height: 300px;
 
   @media (min-width: 768px) {
     height: 100%;
   }
 
-  /* Added styles for mobile responsiveness */
   @media (max-width: 767px) {
-    height: 200px; /* Adjust height for mobile screens */
+    height: 200px;
     width: 100%;
   }
 `;
@@ -52,9 +51,9 @@ const ImageWrapper = styled.div`
 const StyledImage = styled.img`
   max-width: 100%;
   max-height: 100%;
-  width: auto; /* Keep aspect ratio */
-  height: auto; /* Keep aspect ratio */
-  border-radius: 10px; /* Optional: Rounded corners */
+  width: auto;
+  height: auto;
+  border-radius: 10px;
 `;
 
 const FormContainer = styled.div`
@@ -64,7 +63,7 @@ const FormContainer = styled.div`
   padding: 30px;
 
   @media (min-width: 768px) {
-    padding: 50px; /* More padding for larger screens */
+    padding: 50px;
   }
 `;
 
@@ -114,9 +113,26 @@ const SubmitButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     transform: scale(1.05);
+  }
+`;
+
+const Loader = styled.div`
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #f76b1c;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.8s linear infinite;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 `;
 
@@ -142,66 +158,97 @@ const SocialIcons = styled.div`
   }
 `;
 
+const MessageStatus = styled.p`
+  color: ${({ isSuccess }) => (isSuccess ? 'green' : 'red')};
+  font-size: 1.1rem;
+  margin-top: 10px;
+  text-align: center;
+`;
+
 function Contact() {
   const form = useRef(); 
+  const [loading, setLoading] = useState(false);
+  const [messageStatus, setMessageStatus] = useState(''); // New state for status message
+  const [isSuccess, setIsSuccess] = useState(false); // To indicate if the submission was successful
+
   const email = "moharoon11107@gmail.com"; 
 
   const sendEmail = (e) => {
     e.preventDefault();
-
+    setLoading(true);
+  
     const messageData = {
       to_name: "Mohamed Haroon",
       from_name: form.current.user_name.value,
       from_email: form.current.user_email.value,
       message: form.current.message.value,
     };
-
+  
     emailjs.send('service_punaynd', 'template_mqg67y9', messageData, 'khrPbhqVPxV-12t2f')
       .then(() => {
-        alert("Email sent successfully!");
-        console.log('SUCCESS!');
-        e.target.reset();
-      }, (error) => {
-        alert("Failed to send email! Please try again later.");
-        console.error('FAILED...', error.text);
+        setLoading(false); // Stop loading after successful submission
+        setMessageStatus('Email sent successfully!'); // Show success message
+        setIsSuccess(true);
+        e.target.reset(); // Reset the form after submission
+      })
+      .catch((error) => {
+        setLoading(false); // Stop loading if there's an error
+        setMessageStatus('Failed to send email! Please try again later.'); // Show error message
+        setIsSuccess(false);
       });
+
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      setMessageStatus('');
+    }, 5000);
   };
 
   return (
-    <Container>
-      <Navbar email={email} phone="91+ 9360984799"/>
-      <Content>
-        <ImageWrapper>
-          <StyledImage src={contactImage} alt="Contact" />
-        </ImageWrapper>
-        <FormContainer>
-          <Title>Contact Me</Title>
-          <Form ref={form} onSubmit={sendEmail}>
-            <label>Your Name</label>
-            <input type="text" name="user_name" required />
-            <label>Your Email</label>
-            <input type="email" name="user_email" required />
-            <label>Your Message</label>
-            <textarea name="message" required />
-            <SubmitButton type="submit">Send Message</SubmitButton>
-          </Form>
-          <SocialIcons>
-            <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" rel="noopener noreferrer">
-              <IoLogoLinkedin />
-            </a>
-            <a href="https://github.com/moharoon11" target="_blank" rel="noopener noreferrer">
-              <IoLogoGithub />
-            </a>
-            <a href="https://www.instagram.com/_mohd.haroon/" target="_blank" rel="noopener noreferrer">
-              <IoLogoInstagram />
-            </a>
-            <a href="mailto:moharoon11107@gmail.com" target="_blank" rel="noopener noreferrer">
-              <IoMail />
-            </a>
-          </SocialIcons>
-        </FormContainer>
-      </Content>
-    </Container>
+    <>
+      
+       <Container>
+       <Navbar email={email} phone="91+ 9360984799"/>
+     <Content>
+       <ImageWrapper>
+         <StyledImage src={contactImage} alt="Contact" />
+       </ImageWrapper>
+       <FormContainer>
+         <Title>Contact Me</Title>
+         <Form ref={form} onSubmit={sendEmail}>
+           <label>Your Name</label>
+           <input type="text" name="user_name" required />
+           <label>Your Email</label>
+           <input type="email" name="user_email" required />
+           <label>Your Message</label>
+           <textarea name="message" required />
+           <SubmitButton type="submit">
+             {loading ? <Loader /> : "Send Message"}
+           </SubmitButton>
+         </Form>
+         {messageStatus && (
+           <MessageStatus isSuccess={isSuccess}>
+             {messageStatus}
+           </MessageStatus>
+         )}
+         <SocialIcons>
+           <a href="https://www.linkedin.com/in/mohamed-haroon-822703227/" target="_blank" rel="noopener noreferrer">
+             <IoLogoLinkedin />
+           </a>
+           <a href="https://github.com/moharoon11" target="_blank" rel="noopener noreferrer">
+             <IoLogoGithub />
+           </a>
+           <a href="https://www.instagram.com/_mohd.haroon/" target="_blank" rel="noopener noreferrer">
+             <IoLogoInstagram />
+           </a>
+           <a href="mailto:moharoon11107@gmail.com" target="_blank" rel="noopener noreferrer">
+             <IoMail />
+           </a>
+         </SocialIcons>
+       </FormContainer>
+     </Content>
+   </Container>
+    </>
+   
   );
 }
 

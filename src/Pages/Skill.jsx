@@ -125,7 +125,14 @@ function Skill() {
   const [skillSet, setSkillSet] = useState([]);
 
   useEffect(() => {
-    fetchSkills();
+    const localSkills = localStorage.getItem('skills');
+    if (localSkills) {
+      // If skills are found in local storage, load them
+      setSkillSet(JSON.parse(localSkills));
+    } else {
+      // If no skills are found, fetch them from the API
+      fetchSkills();
+    }
   }, []);
 
   const fetchSkills = async () => {
@@ -133,16 +140,24 @@ function Skill() {
       const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/skills/getAll/44200315`);
       const data = await response.json();
       if (data.length > 0) {
-        setSkillSet(data.map(skill => ({
+        const skillsData = data.map(skill => ({
           ...skill,
           skillIcon: `data:${skill.iconType};base64,${skill.skillIcon}`, // Use base64 for API icons
-        })));
+        }));
+
+        // Store the fetched skills in local storage
+        localStorage.setItem('skills', JSON.stringify(skillsData));
+        setSkillSet(skillsData);
       } else {
-        setSkillSet(hardcodedSkills); // Use hardcoded skills if API returns no skills
+        // Use hardcoded skills if the API returns no skills
+        localStorage.setItem('skills', JSON.stringify(hardcodedSkills));
+        setSkillSet(hardcodedSkills);
       }
     } catch (error) {
       console.error('Error fetching skills:', error);
-      setSkillSet(hardcodedSkills); // Use hardcoded skills on error
+      // Use hardcoded skills in case of error
+      localStorage.setItem('skills', JSON.stringify(hardcodedSkills));
+      setSkillSet(hardcodedSkills);
     }
   };
 
@@ -173,8 +188,8 @@ function Skill() {
         ))}
       </SkillContainer>
       <Footer>
-        © 2024 Mohamed Haroon - All Rights Reserved
-      </Footer>
+  © 2024 Mohamed Haroon | Crafted with care
+</Footer>
     </PageWrapper>
   );
 }

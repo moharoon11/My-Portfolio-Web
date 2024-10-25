@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom'; // Import NavLink
 import styled from 'styled-components';
 import { FaEnvelope, FaPhoneAlt } from 'react-icons/fa'; // Importing icons
 
 // Styled Components
 const NavContainer = styled.header`
-  width: 98%;
+  width: 99%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -64,20 +64,25 @@ const NavLinks = styled.nav`
     position: relative;
     padding-top: 10px;
   }
+`;
 
-  a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
+const StyledNavLink = styled(NavLink)`
+  margin: 0 15px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  border-bottom: 2px solid transparent; // Default border color
 
-    &:hover {
-      color: #f77;
-    }
+  &.active {
+    border-bottom: 2px solid #ff9900; // Active underline color
+  }
 
-    @media (max-width: 768px) {
-      margin: 10px 0;
-    }
+  &:hover {
+    color: #f77;
+  }
+
+  @media (max-width: 768px) {
+    margin: 10px 0;
   }
 `;
 
@@ -134,11 +139,11 @@ function Navbar({ email, phone }) {
             <span>{phone}</span>
           </IconTextWrapper>
         </LogoContainer>
-        
+
         <NavLinks isOpen={isOpen}>
-          <Link to="/">Portfolio</Link>
-          <Link to="/skill">Skills</Link>
-          <Link to="/project">Project</Link>
+          <StyledNavLink to="/" exact activeClassName="active">Portfolio</StyledNavLink>
+          <StyledNavLink to="/skill" activeClassName="active">Skills</StyledNavLink>
+          <StyledNavLink to="/project" activeClassName="active">Project</StyledNavLink>
           <ContactLink to="/contact">Contact</ContactLink>
         </NavLinks>
       </NavContainer>
