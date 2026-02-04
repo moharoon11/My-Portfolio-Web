@@ -272,21 +272,6 @@ const LoadingText = styled.div`
   }
 `;
 
-const LoaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* Centers the items horizontally */
-  justify-content: center;  /* Centers the items vertically */
-  height: calc(100vh - 250px);  /* Full height of the viewport minus some space */
-  margin-top: 50px;  /* Pushes the container down */
-  border-radius: 10px;  /* Rounded corners */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
-  padding: 10px; /* Padding around the content */
-  width: 100%;
-  
-  /* Adding a light background color to indicate loading */
-  background: rgba(255, 255, 255, 0.8);  /* Light whitish background with some transparency */
-`;
 
 // Animation variants for framer-motion
 const pageVariants = {
@@ -315,7 +300,6 @@ const Index = () => {
 
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageType, setProfileImageType] = useState("");
-  const [fallbackProfileImage, setFallbackPorfileImage] = useState(null);
   
 
   const [resume, setResume] = useState([]);
@@ -326,49 +310,23 @@ const Index = () => {
 
 
   const fetchUser = async () => {
-    // Try to get data from local storage first
-    const localStorageUserData = localStorage.getItem('userData');
-  
-    if (localStorageUserData) {
-      const data = JSON.parse(localStorageUserData);
-      setName(data.name);
-      setAbout(data.about);
-      setEmail(data.email);
-      setRole(data.role);
-      setProfileImage(data.userImage1);
-      setProfileImageType(data.userImage1Type);
-      setResume(data.resume);
-      setResumeType(data.resumeType);
-      setLoading(false);
-      console.log("Loaded data from local storage");
-      return; // Exit if data is loaded from local storage
-    }
+    
   
     try {
-      const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/users/get/44200315`);
-      const data = await response.json();
+     
   
-      // Update state with the fetched data
-      setName(data.name);
-      setAbout(data.about);
-      setEmail(data.email);
-      setRole(data.role);
-      setProfileImage(data.userImage1);
-      setProfileImageType(data.userImage1Type);
-      setResume(data.resume);
-      setResumeType(data.resumeType);
-  
-      // Save the fetched data to local storage
-      localStorage.setItem('userData', JSON.stringify(data));
-  
-      setLoading(false);
-      console.log("Data has been loaded from the API");
-    } catch (error) {
       setName("Mohamed Haroon");
       setAbout("A recent IT graduate with a strong passion for Java and full-stack development.");
       setEmail("moharoon11107@gmail.com");
       setRole("FRESHER | JAVA DEVELOPER");
       setProfileImage(haroon3);
+      setProfileImageType("image/jpeg");
+      // setResume(data.resume);
+      // setResumeType(data.resumeType);
+
+      console.log("Data has been loaded from the API");
+    } catch (error) {
+     
       console.log("Failed to fetch data from the server! loading and displaying the static data... to the web");
     }
   };
@@ -377,23 +335,15 @@ const Index = () => {
     fetchUser();
   }, []);
 
-  // Function to download resume from server if available, else fallback to public resume
   const downloadResume = () => {
-    if (resume && resume.length > 0) {
-      const blob = new Blob([new Uint8Array(resume)], { type: resumeType });
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'mohamed_haroon_resume.pdf'; // Change file name if required
-      link.click();
-    } else {
-      const link = document.createElement('a');
-      link.href = '/resume.pdf'; // Make sure the resume is placed in the public folder
+      link.href = '/resume.pdf';
       link.download = 'mohamed_haroon_resume.pdf';
       link.click();
     }
-  };
 
-  return (
+
+    return (
     <motion.div
       initial="initial"
       animate="in"
@@ -404,16 +354,6 @@ const Index = () => {
        
       <Container>
       <Navbar email={email} phone="+91 9360984799" />
-
-        {loading ? 
-           (
-            <LoaderContainer>
-             <LoadingText>loading...</LoadingText>
-              <Loader />
-            </LoaderContainer>
-            
-           ) : 
-           (
 
             <Content>
             <IntroText>
@@ -438,7 +378,7 @@ const Index = () => {
       <SiLeetcode />
       <span>LeetCode</span>
     </StyledIcon>
-    <StyledIcon href="https://www.instagram.com/_mohd.haroon/" target="_blank" color="#E1306C">
+    <StyledIcon href="https://www.instagram.com/_haroon.34/" target="_blank" color="#E1306C">
       <IoLogoInstagram />
       <span>Instagram</span>
     </StyledIcon>
@@ -447,18 +387,17 @@ const Index = () => {
             </IntroText>
             <ImageSection>
               <img
-                src={profileImage ? `data:${profileImageType};base64,${profileImage}` : fallbackProfileImage}
-                alt="Profile"
-              />
+  src={profileImage}
+  alt="Profile"
+/>
             </ImageSection>
           </Content>
-           )
-        }
-        
       </Container>
     
     </motion.div>
   );
-};
 
+  };
+
+  
 export default Index;

@@ -190,82 +190,82 @@ const LoaderContainer = styled.div`
 
 
 const hardcodedProjects = [
-   {
-    projectId: 1, 
-    projectName: 'Portfolio Management API', 
-    projectDescription: 'The Portfolio Management API is a comprehensive solution developed using Spring Boot, designed to empower users in managing their professional profiles. This API', 
+  {
+    projectId: 1,
+    projectName: 'Portfolio Management API',
+    projectDescription: 'The Portfolio Management API is a comprehensive solution developed using Spring Boot, designed to empower users in managing their professional profiles. This API',
     projectImage: portfolioapiimage,
     codeLink: 'https://github.com/moharoon11/PortfolioManagementAPI',
     liveLink: ''
   },
-   {
-     projectId: 2,
-     projectName: 'Blogging API', 
-     projectDescription: 'The Blogging API is a robust solution built with Spring Boot, designed to provide users with a seamless platform for creating and managing blog content. Leveraging Spring Security with JWT', 
-     projectImage: bloggingproject,
-     codeLink: 'https://github.com/moharoon11/Blogging_API',
-     liveLink: ''
-    },
-   {
-    projectId: 3, 
-    projectName: 'Product Management API', 
+  {
+    projectId: 2,
+    projectName: 'Blogging API',
+    projectDescription: 'The Blogging API is a robust solution built with Spring Boot, designed to provide users with a seamless platform for creating and managing blog content. Leveraging Spring Security with JWT',
+    projectImage: bloggingproject,
+    codeLink: 'https://github.com/moharoon11/Blogging_API',
+    liveLink: ''
+  },
+  {
+    projectId: 3,
+    projectName: 'Product Management API',
     projectDescription: 'The Product Management API is a powerful backend solution built with Spring Boot to help users manage their products easily. It allows users to perform CRUD (Create, Read, Update, Delete',
     projectImage: productimage,
     codeLink: 'https://github.com/moharoon11/ProductManagementAPI',
     liveLink: ''
-    },
-   {
-    projectId: 4, 
-    projectName: 'Youtube-Clone', 
-    projectDescription: 'A YouTube clone built with React that fetches data from an API to display videos seamlessly on the web.', 
+  },
+  {
+    projectId: 4,
+    projectName: 'Youtube-Clone',
+    projectDescription: 'A YouTube clone built with React that fetches data from an API to display videos seamlessly on the web.',
     projectImage: youtubecloneimage,
     codeLink: 'https://github.com/moharoon11/React-Youtube-clone',
     liveLink: 'https://whimsical-peony-390a65.netlify.app/'
   },
-   {
-    projectId: 5, 
-    projectName: 'Recipe App', 
-    projectDescription: 'A web application that displays a variety of recipes to users based on their search and selected categories, using an API to fetch data.', 
+  {
+    projectId: 5,
+    projectName: 'Recipe App',
+    projectDescription: 'A web application that displays a variety of recipes to users based on their search and selected categories, using an API to fetch data.',
     projectImage: recipeimage,
     codeLink: 'https://github.com/moharoon11/ReactRecipe',
     liveLink: 'https://transcendent-gnome-9d81b2.netlify.app/'
   },
-   {
-    projectId: 6, 
-    projectName: 'ENotes Web App', 
-    projectDescription: 'An eNotes web application developed using Servlets, JSP, JDBC, and MySQL, allowing users to register, log in, and create, read, update, and delete notes."', 
+  {
+    projectId: 6,
+    projectName: 'ENotes Web App',
+    projectDescription: 'An eNotes web application developed using Servlets, JSP, JDBC, and MySQL, allowing users to register, log in, and create, read, update, and delete notes."',
     projectImage: enotesimage,
     codeLink: 'https://github.com/moharoon11/ENotes-Web-App',
     liveLink: ''
   },
-   {
-    projectId: 7, 
-    projectName: 'CurrencyConvertor', 
-    projectDescription: 'A web application built with JavaScript that converts and displays currency values between different countries.', 
+  {
+    projectId: 7,
+    projectName: 'CurrencyConvertor',
+    projectDescription: 'A web application built with JavaScript that converts and displays currency values between different countries.',
     projectImage: currencyconvertor,
     codeLink: 'https://github.com/moharoon11/CurrencyConvertor',
     liveLink: 'https://shimmering-ganache-2ce39e.netlify.app/'
   },
-   {
-    projectId: 8, 
-    projectName: 'Amazon UI Clone', 
-    projectDescription: 'Built with HTML and CSS', 
+  {
+    projectId: 8,
+    projectName: 'Amazon UI Clone',
+    projectDescription: 'Built with HTML and CSS',
     projectImage: amazonui,
     codeLink: 'https://github.com/moharoon11/Amazon-UI-',
     liveLink: 'https://exquisite-trifle-34368a.netlify.app/'
   },
-   {
-     projectId: 9, 
-     projectName: 'Social Media Web UI',
-     projectDescription: 'Built by html, css and javascript for dom manipulation', 
-     projectImage: socialmediawebimage,
-     codeLink: 'https://github.com/moharoon11/Social-Media-Web',
-     liveLink: 'https://strong-cuchufli-817bd1.netlify.app/'
-    },
-   {
-    projectId: 10, 
-    projectName: 'Admin Dashboard UI', 
-    projectDescription: 'Dashboard UI built with html and css', 
+  {
+    projectId: 9,
+    projectName: 'Social Media Web UI',
+    projectDescription: 'Built by html, css and javascript for dom manipulation',
+    projectImage: socialmediawebimage,
+    codeLink: 'https://github.com/moharoon11/Social-Media-Web',
+    liveLink: 'https://strong-cuchufli-817bd1.netlify.app/'
+  },
+  {
+    projectId: 10,
+    projectName: 'Admin Dashboard UI',
+    projectDescription: 'Dashboard UI built with html and css',
     projectImage: admindashboard,
     codeLink: 'https://github.com/moharoon11/Responsive-Admin-Dashboard',
     liveLink: 'https://ephemeral-alpaca-cf694b.netlify.app/'
@@ -274,53 +274,34 @@ const hardcodedProjects = [
 
 async function fetchProjects() {
   const response = await fetch(`http://ec2-13-126-99-50.ap-south-1.compute.amazonaws.com:8888/api/projects/user/44200315`);
-  
+
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
   return response.json();
 }
+
+
 function Project() {
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const [projectsPerPage] = useState(3); // Number of projects to show per page
 
-  const { status, error } = useQuery('myProjects', fetchProjects, {
-    onSuccess: (data) => {
-      setProjects(data);  // Set the fetched projects if successful
-    },
-    onError: () => {
-      // Handle the error by falling back to hardcoded projects
-      setProjects(hardcodedProjects);
-    },
-  });
+  useEffect(() => {
+    setProjects(hardcodedProjects);
+  }, []);
 
-  if (status === 'loading') {
-    return (
-      <>
-       <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799" />
-      <LoaderContainer>
-        <LoadingText>Loading Projects....</LoadingText>
-        <Loader />
-      </LoaderContainer>
-      </>
-   
-    );
-  }
 
-  // Calculate current projects to display
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
 
-  // Calculate total pages
   const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   return (
     <>
-      
       <ProjectContainer>
-      <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799" />
+        <Navbar email="moharoon11107@gmail.com" phone="91+ 9360984799" />
         <ProjectList>
           {currentProjects.map((project) => (
             <ProjectCard
@@ -332,8 +313,8 @@ function Project() {
             >
               <ProjectImage
                 src={project.imageDate
-                      ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
-                      : project.projectImage                                    // Hardcoded asset image
+                  ? `data:${project.imageType};base64,${project.imageDate}`  // API image case
+                  : project.projectImage                                    // Hardcoded asset image
                 }
                 alt={project.imageName || project.projectName}   // Fallback for alt if imageName is missing
               />
@@ -386,9 +367,9 @@ function Project() {
           ))}
         </div>
       </ProjectContainer>
-      
-     
-      
+
+
+
     </>
   );
 }
